@@ -164,23 +164,15 @@ while true; do
     printf "${SKYBLUE}     ⚡ 脚本工具箱 ⚡         \n${NC}"
     printf "${SKYBLUE}=========================================\n${NC}"
     echo " 1. 安装 OpenVPN"
-    echo " 2. 安装 Hysteria 2"
     echo " 3. 安装 frp 端口映射"
     echo " 4. 安装 rinetd TCP端口映射"
-    echo " 5. 安装 SoftEther VPN"
     echo " 6. sing‑box 五合一脚本"
-    echo " 7. linux系统工具"
-    echo " 8. 系统防火墙管理"
-    echo " 9. 安装 AmneziaWG VPN"
     echo " 0. 退出脚本"
     printf "${SKYBLUE}=========================================\n${NC}"
-    read -p "请选择操作 [0‑9]: " CHOICE
+    read -p "请选择操作 [0,1,3,4,6]: " CHOICE
     case "$CHOICE" in
         1)
             do_openvpn_manager
-            ;;
-        2)
-            do_install_hy2
             ;;
         3)
             do_install_frp
@@ -188,27 +180,15 @@ while true; do
         4)
             do_install_rinetd
             ;;
-        5)
-            do_install_softether
-            ;;
         6)
             do_install_singbox
-            ;;
-        7)
-            do_install_system_tools
-            ;;
-        8)
-            do_install_firewall
-            ;;
-        9)
-            do_install_amneziawg
             ;;
         0)
             echo "已安全退出脚本。"
             break
             ;;
         *)
-            printf "${RED}❌ 无效的选项，请输入 0 到 9 之间的数字。\n${NC}"
+            printf "${RED}❌ 无效的选项，请输入 0、1、3、4、6。\n${NC}"
             ;;
     esac
 done
