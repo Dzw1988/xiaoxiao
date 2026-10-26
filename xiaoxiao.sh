@@ -1,5 +1,3 @@
-下面是修改完成后的完整综合脚本，仅替换4个脚本的下载地址，其余全部逻辑、菜单、函数保持原样。
-```bash
 #!/bin/bash
 export LANG=en_US.UTF-8
 # 确保以 root 权限运行
@@ -24,7 +22,7 @@ check_openvpn_installed() {
 # ----------------- OpenVPN 管理函数（安装与客户端管理一体化） -----------------
 do_openvpn_manager() {
     if [ ! -f "openvpn-install.sh" ]; then
-        wget -O openvpn-install.sh [https://raw.githubusercontent.com/Dzw1988/open/main/open.sh](https://raw.githubusercontent.com/Dzw1988/open/main/open.sh) >/dev/null 2>&1
+        wget -O openvpn-install.sh https://raw.githubusercontent.com/Dzw1988/open/main/open.sh >/dev/null 2>&1
         chmod +x openvpn-install.sh
     fi
     if check_openvpn_installed; then
@@ -44,33 +42,33 @@ do_openvpn_manager() {
 # ----------------- 其他工具安装函数 -----------------
 do_install_hy2() {
     echo "=== 正在启动 Hysteria 2 一键脚本 ==="
-    bash <(wget -qO- [https://raw.githubusercontent.com/pinode1314/hysteria2/main/hysteria2.sh](https://raw.githubusercontent.com/pinode1314/hysteria2/main/hysteria2.sh))
+    bash <(wget -qO- https://raw.githubusercontent.com/pinode1314/hysteria2/main/hysteria2.sh)
 }
 do_install_frp() {
     echo "=== 正在启动 FRP 一键安装脚本 ==="
-    bash <(wget -qO- [https://raw.githubusercontent.com/Dzw1988/FRP/main/frp.sh](https://raw.githubusercontent.com/Dzw1988/FRP/main/frp.sh))
+    bash <(wget -qO- https://raw.githubusercontent.com/Dzw1988/FRP/main/frp.sh)
 }
 do_install_rinetd() {
     echo "=== 正在启动 Rinetd 一键脚本 ==="
-    bash <(wget -qO- [https://raw.githubusercontent.com/Dzw1988/rinetd/main/rinetd.sh](https://raw.githubusercontent.com/Dzw1988/rinetd/main/rinetd.sh))
+    bash <(wget -qO- https://raw.githubusercontent.com/Dzw1988/rinetd/main/rinetd.sh)
 }
 do_install_softether() {
     echo "=== 正在启动 SoftEther 一键脚本 ==="
-    bash <(wget -qO- [https://raw.githubusercontent.com/pinode1314/SoftEther/main/SoftEther.sh](https://raw.githubusercontent.com/pinode1314/SoftEther/main/SoftEther.sh))
+    bash <(wget -qO- https://raw.githubusercontent.com/pinode1314/SoftEther/main/SoftEther.sh)
 }
 do_install_singbox() {
     echo "=== 正在启动五合一脚本 ==="
-    bash <(wget -qO- [https://raw.githubusercontent.com/Dzw1988/sing-box/main/sb.sh](https://raw.githubusercontent.com/Dzw1988/sing-box/main/sb.sh))
+    bash <(wget -qO- https://raw.githubusercontent.com/Dzw1988/sing-box/main/sb.sh)
     # 安装完成后自动执行指定命令生成订阅链接
     printf '3\n8\n1\n888988' | sb
 }
 do_install_system_tools() {
     echo "=== 正在启动 linux系统工具 ==="
-    bash <(wget -qO- [https://raw.githubusercontent.com/pinode1314/SSH/main/SSH.sh](https://raw.githubusercontent.com/pinode1314/SSH/main/SSH.sh))
+    bash <(wget -qO- https://raw.githubusercontent.com/pinode1314/SSH/main/SSH.sh)
 }
 do_install_firewall() {
     echo "=== 正在启动防火墙管理脚本 ==="
-    bash <(wget -qO- [https://raw.githubusercontent.com/pinode1314/firewall/main/firewall.sh](https://raw.githubusercontent.com/pinode1314/firewall/main/firewall.sh))
+    bash <(wget -qO- https://raw.githubusercontent.com/pinode1314/firewall/main/firewall.sh)
 }
 # ----------------- AmneziaWG 安装管理函数（全流程终极全汉化版） -----------------
 do_install_amneziawg() {
@@ -78,7 +76,7 @@ do_install_amneziawg() {
     
     # 强制重新下载最新脚本
     rm -f amneziawg-install.sh
-    curl -sO [https://raw.githubusercontent.com/wiresock/amneziawg-install/main/amneziawg-install.sh](https://raw.githubusercontent.com/wiresock/amneziawg-install/main/amneziawg-install.sh)
+    curl -sO https://raw.githubusercontent.com/wiresock/amneziawg-install/main/amneziawg-install.sh
     
     if [ -f "amneziawg-install.sh" ]; then
         # 1. 安装前引导及基础配置项汉化
