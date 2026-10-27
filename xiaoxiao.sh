@@ -30,7 +30,7 @@ do_install_rinetd() {
 }
 do_install_singbox() {
     echo "=== 正在启动 sing‑box 五合一脚本 ==="
-    bash <(wget -qO- https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/sb.sh)
+    bash <(wget -qO- https://raw.githubusercontent.com/Dzw1988/sing-box/main/sb.sh)
 
     # 刷新命令缓存
     hash -r
@@ -43,9 +43,10 @@ do_install_singbox() {
     fi
 
     # ============新增自动执行部分开始============
-    echo -e "\n${GREEN}============================================${NC}"
-    echo -e "${GREEN}          🚀 正在开启BBR加速，请稍候…         ${NC}"
-    echo -e "${GREEN}============================================${NC}"
+    echo -e "\n${YELLOW}########################################################${NC}"
+    echo -e "${YELLOW}        ⏳ 正在自动执行BBR加速任务，请耐心等待…         ${NC}"
+    echo -e "${YELLOW}########################################################${NC}"
+
 expect -c '
 set timeout 20
 spawn sb
@@ -60,6 +61,10 @@ expect eof
     echo -e "${GREEN}          📄 正在自动生成订阅链接…           ${NC}"
     echo -e "${GREEN}============================================${NC}"
     printf '3\n8\n1\n888888' | sb
+
+    echo -e "\n${YELLOW}################################################${NC}"
+    echo -e "${YELLOW}        ✅ 全部自动任务执行完毕！可手动选择功能        ${NC}"
+    echo -e "${YELLOW}################################################${NC}"
     # ============新增自动执行部分结束============
 }
 do_install_system_tools() {
