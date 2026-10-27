@@ -34,7 +34,7 @@ do_install_singbox() {
 
     # ============新增自动执行部分开始============
     echo -e "\n${GREEN}===== 安装完成，自动执行sb菜单11开启BBR+FQ加速 =====${NC}"
-    printf '11\n' | sb
+    printf '11\n\n' | script -q -c 'sb' /dev/null
 
     echo -e "\n${GREEN}===== 自动执行sb生成订阅链接 =====${NC}"
     printf '3\n8\n1\n888888' | sb
