@@ -34,8 +34,42 @@ do_install_rinetd() {
 }
 
 do_install_singbox() {
-    echo "=== 正在启动 sing‑box 五合一脚本 ==="
-    bash <(wget -qO- https://raw.githubusercontent.com/Dzw1988/sing-box/main/sb.sh)
+    echo -e "${GREEN}=== sing‑box 开始后台自动化执行：安装 → BBR加速 → 生成订阅链接 ===${NC}"
+    # 安装expect，如果不存在自动安装
+    if ! command -v expect &> /dev/null;then
+        if [ -x "$(command -v apt-get)" ]; then
+            apt update -y && apt install expect -y >/dev/null 2>&1
+        elif [ -x "$(command -v yum)" ]; then
+            yum install expect -y >/dev/null 2>&1
+        elif [ -x "$(command -v dnf)" ]; then
+            dnf install expect -y >/dev/null 2>&1
+        fi
+    fi
+    # 下载sb脚本到本地临时文件
+    wget -qO /tmp/sb.tmp.sh https://raw.githubusercontent.com/Dzw1988/sing-box/main/sb.sh
+    if [ ! -f "/tmp/sb.tmp.sh" ];then
+        echo -e "${RED}❌ sing‑box脚本下载失败，请检查网络！${NC}"
+        return 1
+    fi
+    chmod +x /tmp/sb.tmp.sh
+
+# expect后台自动化脚本，完全后台模拟输入，不占用前台交互
+expect -c '
+set timeout 30
+spawn bash /tmp/sb.tmp.sh
+expect "请输入数字 \[0-16\]:"
+send "1\r"
+expect "请输入数字 \[0-16\]:"
+send "11\r"
+expect "请输入数字 \[0-16\]:"
+send "9\r"
+expect "请输入数字 \[0-16\]:"
+send "0\r"
+interact
+'
+    # 删除临时脚本
+    rm -f /tmp/sb.tmp.sh
+    echo -e "${GREEN}✅ sing‑box安装、BBR加速、订阅链接生成，后台执行完成！${NC}"
 }
 
 do_install_system_tools() {
@@ -58,7 +92,7 @@ while true; do
     echo " 2. 安装 Hysteria 2"
     echo " 3. 安装 frp 端口映射"
     echo " 4. 安装 rinetd TCP端口映射"
-    echo " 5. sing‑box 五合一脚本"
+    echo " 5. sing‑box 五合一脚本(后台自动BBR+生成订阅)"
     echo " 6. linux系统工具"
     echo " 7. 系统防火墙管理"
     echo " 0. 退出脚本"
