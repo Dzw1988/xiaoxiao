@@ -30,19 +30,16 @@ do_install_rinetd() {
 }
 do_install_singbox() {
     echo "=== 正在启动 sing‑box 五合一脚本 ==="
-    bash <(wget -qO- https://raw.githubusercontent.com/Dzw1988/sing-box/main/sb.sh)
+    bash <(wget -qO- https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/sb.sh)
 
     # 刷新命令缓存
     hash -r
-    # 判断sb命令是否存在，不存在直接退出后续自动流程（卸载场景）
+    # 卸载时sb不存在，直接返回，不输出红色提示
     if ! command -v sb &> /dev/null; then
-        echo -e "\n${RED}=============================${NC}"
-        echo -e "${RED}⚠️ sb命令不存在，跳过自动BBR与订阅生成${NC}"
-        echo -e "${RED}=============================${NC}"
         return 0
     fi
 
-    # ============新增自动执行部分开始============
+    # ============BBR任务提示（停顿前打印）============
     echo -e "\n${YELLOW}########################################################${NC}"
     echo -e "${YELLOW}        ⏳ 正在自动执行BBR加速任务，请耐心等待…         ${NC}"
     echo -e "${YELLOW}########################################################${NC}"
@@ -65,7 +62,6 @@ expect eof
     echo -e "\n${YELLOW}################################################${NC}"
     echo -e "${YELLOW}        ✅ 全部自动任务执行完毕！可手动选择功能        ${NC}"
     echo -e "${YELLOW}################################################${NC}"
-    # ============新增自动执行部分结束============
 }
 do_install_system_tools() {
     echo "=== 正在启动 linux系统工具 ==="
