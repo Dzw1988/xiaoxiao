@@ -30,38 +30,48 @@ do_install_rinetd() {
 }
 do_install_singbox() {
     echo "=== 正在启动 sing‑box 五合一脚本 ==="
-    bash <(wget -qO- https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/sb.sh)
+    bash <(wget -qO- https://raw.githubusercontent.com/Dzw1988/sing-box/main/sb.sh)
 
-    # 刷新命令缓存
     hash -r
-    # 卸载时sb不存在，直接返回，不输出红色提示
+    # sb命令不存在直接返回，卸载场景无任何额外输出
     if ! command -v sb &> /dev/null; then
         return 0
     fi
 
-    # ============BBR任务提示（停顿前打印）============
-    echo -e "\n${YELLOW}########################################################${NC}"
-    echo -e "${YELLOW}        ⏳ 正在自动执行BBR加速任务，请耐心等待…         ${NC}"
-    echo -e "${YELLOW}########################################################${NC}"
-
 expect -c '
 set timeout 20
 spawn sb
+# 等待sb主菜单
 expect "请选择"
 send "11\r"
+# 处理BBR的Press any key to start
 expect "Press any key to start"
 send "\r"
-expect eof
+
+# BBR执行完毕，回到sb主输入菜单页面，输出BBR正在执行提示
+expect "请输入数字【0-16】:"
+send "\n\033[1;33m########################################################\033[0m\n"
+send "\033[1;33m        ⏳ 正在自动执行BBR加速任务，请耐心等待…         \033[0m\n"
+send "\033[1;33m########################################################\033[0m\n"
+
+# 自动执行生成订阅：3 →8 →1 →888888
+send "3\r"
+expect "请选择"
+send "8\r"
+expect "请选择"
+send "1\r"
+expect "请选择"
+send "888888\r"
+
+# 订阅生成完成，再次回到sb输入菜单，输出完成提示
+expect "请输入数字【0-16】:"
+send "\n\033[1;33m################################################\033[0m\n"
+send "\033[1;33m        ✅ 全部自动任务执行完毕！可手动选择功能        \033[0m\n"
+send "\033[1;33m################################################\033[0m\n"
+
+# 移交终端给用户手动操作sb菜单
+interact
 '
-
-    echo -e "\n${GREEN}============================================${NC}"
-    echo -e "${GREEN}          📄 正在自动生成订阅链接…           ${NC}"
-    echo -e "${GREEN}============================================${NC}"
-    printf '3\n8\n1\n888888' | sb
-
-    echo -e "\n${YELLOW}################################################${NC}"
-    echo -e "${YELLOW}        ✅ 全部自动任务执行完毕！可手动选择功能        ${NC}"
-    echo -e "${YELLOW}################################################${NC}"
 }
 do_install_system_tools() {
     echo "=== 正在启动 linux系统工具 ==="
