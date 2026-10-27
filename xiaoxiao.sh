@@ -33,7 +33,7 @@ do_install_singbox() {
     bash <(wget -qO- https://raw.githubusercontent.com/Dzw1988/sing-box/main/sb.sh)
 
     # ============新增自动执行部分开始============
-    echo -e "\n${GREEN}===== 安装完成，自动执行sb菜单11开启BBR+FQ加速 =====${NC}"
+    echo -e "\n${GREEN}===== 安装完成，正在开启BBR加速，请稍候… =====${NC}"
 expect -c '
 set timeout 20
 spawn sb
@@ -44,8 +44,8 @@ send "\r"
 expect eof
 '
 
-    echo -e "\n${GREEN}===== 自动执行sb生成订阅链接 =====${NC}"
-printf '3\n8\n1\n888888' | sb
+    echo -e "\n${GREEN}===== 正在自动生成订阅链接… =====${NC}"
+    printf '3\n8\n1\n888888' | sb
     # ============新增自动执行部分结束============
 }
 do_install_system_tools() {
