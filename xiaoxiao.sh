@@ -11,77 +11,43 @@ GREEN='\033[1;32m'
 YELLOW='\033[1;33m'
 SKYBLUE='\033[1;36m'
 NC='\033[0m' # 恢复默认颜色
-
 # ----------------- 工具函数 -----------------
 do_openvpn_manager() {
     echo "=== 正在启动 OpenVPN 一键脚本 ==="
     bash <(wget -qO- https://raw.githubusercontent.com/Dzw1988/open/main/open.sh)
 }
-
 do_install_hy2() {
     echo "=== 正在启动 Hysteria 2 一键脚本 ==="
     bash <(wget -qO- https://raw.githubusercontent.com/Dzw1988/hysteria2/main/hysteria2.sh)
 }
-
 do_install_frp() {
     echo "=== 正在启动 FRP 一键安装脚本 ==="
     bash <(wget -qO- https://raw.githubusercontent.com/Dzw1988/FRP/main/frp.sh)
 }
-
 do_install_rinetd() {
     echo "=== 正在启动 Rinetd 一键脚本 ==="
     bash <(wget -qO- https://raw.githubusercontent.com/Dzw1988/rinetd/main/rinetd.sh)
 }
-
 do_install_singbox() {
-    echo -e "${GREEN}=== sing‑box 开始后台自动化执行：安装 → BBR加速 → 生成订阅链接 ===${NC}"
-    # 安装expect，如果不存在自动安装
-    if ! command -v expect &> /dev/null;then
-        if [ -x "$(command -v apt-get)" ]; then
-            apt update -y && apt install expect -y >/dev/null 2>&1
-        elif [ -x "$(command -v yum)" ]; then
-            yum install expect -y >/dev/null 2>&1
-        elif [ -x "$(command -v dnf)" ]; then
-            dnf install expect -y >/dev/null 2>&1
-        fi
-    fi
-    # 下载sb脚本到本地临时文件
-    wget -qO /tmp/sb.tmp.sh https://raw.githubusercontent.com/Dzw1988/sing-box/main/sb.sh
-    if [ ! -f "/tmp/sb.tmp.sh" ];then
-        echo -e "${RED}❌ sing‑box脚本下载失败，请检查网络！${NC}"
-        return 1
-    fi
-    chmod +x /tmp/sb.tmp.sh
+    echo "=== 正在启动 sing‑box 五合一脚本 ==="
+    bash <(wget -qO- https://raw.githubusercontent.com/Dzw1988/sing-box/main/sb.sh)
 
-# expect后台自动化脚本，完全后台模拟输入，不占用前台交互
-expect -c '
-set timeout 30
-spawn bash /tmp/sb.tmp.sh
-expect "请输入数字 \[0-16\]:"
-send "1\r"
-expect "请输入数字 \[0-16\]:"
-send "11\r"
-expect "请输入数字 \[0-16\]:"
-send "9\r"
-expect "请输入数字 \[0-16\]:"
-send "0\r"
-interact
-'
-    # 删除临时脚本
-    rm -f /tmp/sb.tmp.sh
-    echo -e "${GREEN}✅ sing‑box安装、BBR加速、订阅链接生成，后台执行完成！${NC}"
+    # ============新增自动执行部分开始============
+    echo -e "\n${GREEN}===== 安装完成，自动执行sb菜单11开启BBR+FQ加速 =====${NC}"
+    printf '11\n' | sb
+
+    echo -e "\n${GREEN}===== 自动执行sb生成订阅链接 =====${NC}"
+    printf '3\n8\n1\n888888' | sb
+    # ============新增自动执行部分结束============
 }
-
 do_install_system_tools() {
     echo "=== 正在启动 linux系统工具 ==="
     bash <(wget -qO- https://raw.githubusercontent.com/Dzw1988/linux/main/linux.sh)
 }
-
 do_install_firewall() {
     echo "=== 正在启动防火墙管理脚本 ==="
     bash <(wget -qO- https://raw.githubusercontent.com/Dzw1988/firewalld/main/firewalld.sh)
 }
-
 # ----------------- 主菜单循环 -----------------
 while true; do
     echo ""
@@ -92,7 +58,7 @@ while true; do
     echo " 2. 安装 Hysteria 2"
     echo " 3. 安装 frp 端口映射"
     echo " 4. 安装 rinetd TCP端口映射"
-    echo " 5. sing‑box 五合一脚本(后台自动BBR+生成订阅)"
+    echo " 5. sing‑box 五合一脚本"
     echo " 6. linux系统工具"
     echo " 7. 系统防火墙管理"
     echo " 0. 退出脚本"
