@@ -30,10 +30,22 @@ do_install_rinetd() {
 }
 do_install_singbox() {
     echo "=== 正在启动 sing‑box 五合一脚本 ==="
-    bash <(wget -qO- https://raw.githubusercontent.com/Dzw1988/sing-box/main/sb.sh)
+    bash <(wget -qO- https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/sb.sh)
+
+    # 刷新命令缓存
+    hash -r
+    # 判断sb命令是否存在，不存在直接退出后续自动流程（卸载场景）
+    if ! command -v sb &> /dev/null; then
+        echo -e "\n${RED}=============================${NC}"
+        echo -e "${RED}⚠️ sb命令不存在，跳过自动BBR与订阅生成${NC}"
+        echo -e "${RED}=============================${NC}"
+        return 0
+    fi
 
     # ============新增自动执行部分开始============
-    echo -e "\n${GREEN}===== 安装完成，正在开启BBR加速，请稍候… =====${NC}"
+    echo -e "\n${GREEN}============================================${NC}"
+    echo -e "${GREEN}          🚀 正在开启BBR加速，请稍候…         ${NC}"
+    echo -e "${GREEN}============================================${NC}"
 expect -c '
 set timeout 20
 spawn sb
@@ -44,7 +56,9 @@ send "\r"
 expect eof
 '
 
-    echo -e "\n${GREEN}===== 正在自动生成订阅链接… =====${NC}"
+    echo -e "\n${GREEN}============================================${NC}"
+    echo -e "${GREEN}          📄 正在自动生成订阅链接…           ${NC}"
+    echo -e "${GREEN}============================================${NC}"
     printf '3\n8\n1\n888888' | sb
     # ============新增自动执行部分结束============
 }
