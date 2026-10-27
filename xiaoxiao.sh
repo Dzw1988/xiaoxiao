@@ -34,10 +34,18 @@ do_install_singbox() {
 
     # ============新增自动执行部分开始============
     echo -e "\n${GREEN}===== 安装完成，自动执行sb菜单11开启BBR+FQ加速 =====${NC}"
-    printf '11\n\n' | script -q -c 'sb' /dev/null
+expect -c '
+set timeout 20
+spawn sb
+expect "请选择"
+send "11\r"
+expect "Press any key to start"
+send "\r"
+expect eof
+'
 
     echo -e "\n${GREEN}===== 自动执行sb生成订阅链接 =====${NC}"
-    printf '3\n8\n1\n888888' | sb
+printf '3\n8\n1\n888888' | sb
     # ============新增自动执行部分结束============
 }
 do_install_system_tools() {
