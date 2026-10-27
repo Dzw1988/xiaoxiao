@@ -33,7 +33,7 @@ do_install_singbox() {
     bash <(wget -qO- https://raw.githubusercontent.com/Dzw1988/sing-box/main/sb.sh)
 
     hash -r
-    # 卸载场景 sb不存在直接返回，无任何输出
+    # 卸载场景 sb不存在直接返回，BBR系统配置保留不删除
     if ! command -v sb &> /dev/null; then
         return 0
     fi
@@ -44,11 +44,19 @@ do_install_singbox() {
     echo -e "${GREEN}============================================${NC}"
     printf '3\n8\n1\n888888' | sb
 
-    # 2、再开启BBR加速
-    echo -e "\n${YELLOW}########################################################${NC}"
-    echo -e "${YELLOW}        ⏳ 正在自动执行BBR加速任务，请耐心等待…         ${NC}"
-    echo -e "${YELLOW}########################################################${NC}"
-    printf '11\n\n' | sb
+    # 2、检测系统BBR是否已经开启，tcp_congestion_control等于bbr则跳过
+    CURRENT_CC=$(sysctl -n net.ipv4.tcp_congestion_control 2>/dev/null)
+    if [ "${CURRENT_CC}" != "bbr" ]; then
+        echo -e "\n${YELLOW}########################################################${NC}"
+        echo -e "${YELLOW}        ⏳ 正在自动执行BBR加速任务，请耐心等待…         ${NC}"
+        echo -e "${YELLOW}########################################################${NC}"
+        # yes '' 持续输出空字符，自动跳过 read -n1 “按任意键”等待，无需手动回车
+        { echo 11; sleep 0.2; } | yes '' | sb
+    else
+        echo -e "\n${GREEN}=================================================${NC}"
+        echo -e "${GREEN}          ✅ 检测到BBR已开启，跳过BBR执行          ${NC}"
+        echo -e "${GREEN}=================================================${NC}"
+    fi
 
     echo -e "\n${YELLOW}################################################${NC}"
     echo -e "${YELLOW}        ✅ 全部自动任务执行完毕！        ${NC}"
