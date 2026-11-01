@@ -56,25 +56,8 @@ check_openvpn_installed() {
 
 # ----------------- OpenVPN 管理函数（安装与客户端管理一体化） -----------------
 do_openvpn_manager() {
-    if [ ! -f "openvpn-install.sh" ]; then
-        wget -O openvpn-install.sh https://git.io/vpn >/dev/null 2>&1
-        chmod +x openvpn-install.sh
-    fi
-
-    if check_openvpn_installed; then
-        echo ""
-        echo "=================================================="
-        printf "${GREEN}✅ 检测到 OpenVPN 服务端已安装！${NC}\n"
-        printf "${GREEN}即将为您打开原版客户端与服务端管理菜单...${NC}\n"
-        echo "=================================================="
-        echo ""
-        read -p "请按回车键继续进入管理菜单..."
-    else
-        echo "=== 正在下载并运行原版 OpenVPN 安装程序 ==="
-    fi
-
-    # 直接调用原版管理/安装脚本（保留原生交互，去掉多设备修改）
-    bash openvpn-install.sh
+    echo "=== 正在启动 OpenVPN 一键脚本 ==="
+    bash <(wget -qO- https://raw.githubusercontent.com/Dzw1988/open/main/open.sh)
 }
 
 # ----------------- 其他工具安装函数 -----------------
