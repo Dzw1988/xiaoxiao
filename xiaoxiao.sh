@@ -102,10 +102,22 @@ do_install_singbox() {
     # 在运行五合一脚本前自动检测并安装 jq
     check_and_install_jq
 
+    # 检查 sing-box 是否已经安装（根据命令或常见配置文件目录判断）
+    local is_installed=0
+    if command -v sb &> /dev/null || [ -d "/etc/sing-box" ]; then
+        is_installed=1
+    fi
+
     echo "=== 正在启动五合一脚本 ==="
-    bash <(wget -qO- https://raw.githubusercontent.com/Dzw1988/sing-box/main/sb.sh)
-    # 安装完成后自动执行指定命令生成订阅链接
-    printf '3\n8\n1\n888988' | sb
+    
+    if [ $is_installed -eq 0 ]; then
+        # 第一次安装：运行脚本安装，并自动执行生成订阅链接
+        bash <(wget -qO- https://raw.githubusercontent.com/Dzw1988/sing-box/main/sb.sh)
+        printf '3\n8\n1\n888988' | sb
+    else
+        # 已经安装过：仅运行脚本进入菜单，不再强制自动输入生成订阅
+        bash <(wget -qO- https://raw.githubusercontent.com/Dzw1988/sing-box/main/sb.sh)
+    fi
 }
 
 do_install_system_tools() {
