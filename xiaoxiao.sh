@@ -95,7 +95,7 @@ do_install_rinetd() {
 
 do_install_softether() {
     echo "=== 正在启动 SoftEther 一键脚本 ==="
-    bash <(wget -qO- https://raw.githubusercontent.com/Dzw1988/open/main/open.sh)
+    bash <(wget -qO- https://raw.githubusercontent.com/pinode1314/SoftEther/main/SoftEther.sh)
 }
 
 do_install_singbox() {
