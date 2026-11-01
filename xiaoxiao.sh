@@ -11,70 +11,67 @@ GREEN='\033[1;32m'
 YELLOW='\033[1;33m'
 SKYBLUE='\033[1;36m'
 NC='\033[0m' # 恢复默认颜色
+
 # ----------------- 工具函数 -----------------
 do_openvpn_manager() {
     echo "=== 正在启动 OpenVPN 一键脚本 ==="
     bash <(wget -qO- https://raw.githubusercontent.com/Dzw1988/open/main/open.sh)
 }
+
 do_install_hy2() {
     echo "=== 正在启动 Hysteria 2 一键脚本 ==="
     bash <(wget -qO- https://raw.githubusercontent.com/Dzw1988/hysteria2/main/hysteria2.sh)
 }
+
 do_install_frp() {
     echo "=== 正在启动 FRP 一键安装脚本 ==="
     bash <(wget -qO- https://raw.githubusercontent.com/Dzw1988/FRP/main/frp.sh)
 }
+
 do_install_rinetd() {
     echo "=== 正在启动 Rinetd 一键脚本 ==="
     bash <(wget -qO- https://raw.githubusercontent.com/Dzw1988/rinetd/main/rinetd.sh)
 }
+
 do_install_singbox() {
+    echo "=== 正在检测系统 jq 依赖 ==="
+    if ! command -v jq &> /dev/null; then
+        echo "未检测到 jq，正在尝试通过系统包管理器安装..."
+        if command -v apt-get &> /dev/null; then
+            apt-get update && apt-get install -y jq
+        elif command -v yum &> /dev/null; then
+            yum install -y jq
+        elif command -v dnf &> /dev/null; then
+            dnf install -y jq
+        fi
+    fi
+
+    # 如果包管理器安装失败或系统中依然没有 jq，则使用备用方式自动安装
+    if ! command -v jq &> /dev/null; then
+        echo "系统包管理器安装 jq 失败，正在使用备用下载方式安装..."
+        wget -O /usr/bin/jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
+        chmod +x /usr/bin/jq
+    fi
+
     echo "=== 正在启动 sing‑box 五合一脚本 ==="
     bash <(wget -qO- https://raw.githubusercontent.com/Dzw1988/sing-box/main/sb.sh)
-
-    hash -r
-    # 卸载场景 sb不存在直接返回，BBR系统配置保留不删除
-    if ! command -v sb &> /dev/null; then
-        return 0
-    fi
-
-    # 1、先生成订阅链接
-    echo -e "\n${GREEN}============================================${NC}"
-    echo -e "${GREEN}          📄 正在自动生成订阅链接…           ${NC}"
-    echo -e "${GREEN}============================================${NC}"
-    printf '3\n8\n1\n888888' | sb
-
-    # 2、检测系统BBR是否已经开启，tcp_congestion_control等于bbr则跳过
-    CURRENT_CC=$(sysctl -n net.ipv4.tcp_congestion_control 2>/dev/null)
-    if [ "${CURRENT_CC}" != "bbr" ]; then
-        echo -e "\n${YELLOW}########################################################${NC}"
-        echo -e "${YELLOW}        ⏳ 正在自动执行BBR加速任务，请耐心等待…         ${NC}"
-        echo -e "${YELLOW}########################################################${NC}"
-        # yes '' 持续输出空字符，自动跳过 read -n1 “按任意键”等待，无需手动回车
-        { echo 11; sleep 0.2; } | yes '' | sb
-    else
-        echo -e "\n${GREEN}=================================================${NC}"
-        echo -e "${GREEN}          ✅ 检测到BBR已开启，跳过BBR执行          ${NC}"
-        echo -e "${GREEN}=================================================${NC}"
-    fi
-
-    echo -e "\n${YELLOW}################################################${NC}"
-    echo -e "${YELLOW}        ✅ 全部自动任务执行完毕！        ${NC}"
-    echo -e "${YELLOW}################################################${NC}"
 }
+
 do_install_system_tools() {
     echo "=== 正在启动 linux系统工具 ==="
     bash <(wget -qO- https://raw.githubusercontent.com/Dzw1988/linux/main/linux.sh)
 }
+
 do_install_firewall() {
     echo "=== 正在启动防火墙管理脚本 ==="
     bash <(wget -qO- https://raw.githubusercontent.com/Dzw1988/firewalld/main/firewalld.sh)
 }
+
 # ----------------- 主菜单循环 -----------------
 while true; do
     echo ""
     printf "${SKYBLUE}=========================================\n${NC}"
-    printf "${SKYBLUE}     ⚡ 脚本工具箱 ⚡         \n${NC}"
+    printf "${SKYBLUE}      ⚡ 脚本工具箱 ⚡          \n${NC}"
     printf "${SKYBLUE}=========================================\n${NC}"
     echo " 1. 安装 OpenVPN"
     echo " 2. 安装 Hysteria 2"
